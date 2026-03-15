@@ -938,7 +938,7 @@ ${used.length?'\nУже используются (не повторяй):\n'+use
         'anthropic-dangerous-direct-browser-access':'true'
       },
       body:JSON.stringify({
-        model:'claude-sonnet-4-6',
+        model:'claude-sonnet-4-20250514',
         max_tokens:1500,
         messages:[{role:'user',content:prompt}]
       })
@@ -1007,7 +1007,7 @@ ${ctx?'Контекст канала: '+ctx+'\n':''}
         'anthropic-dangerous-direct-browser-access':'true'
       },
       body:JSON.stringify({
-        model:'claude-sonnet-4-6',
+        model:'claude-sonnet-4-20250514',
         max_tokens:1000,
         messages:[{role:'user',content:prompt}]
       })
