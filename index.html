@@ -938,13 +938,15 @@ ${used.length?'\nУже используются (не повторяй):\n'+use
         'anthropic-dangerous-direct-browser-access':'true'
       },
       body:JSON.stringify({
-        model:'claude-sonnet-4-20250514',
+        model:'claude-sonnet-4-6',
         max_tokens:1500,
         messages:[{role:'user',content:prompt}]
       })
     });
-    if(!r.ok)throw new Error('HTTP '+r.status);
-    const d=await r.json();
+    const _t1=await r.text();
+    console.log('Claude API '+r.status+':',_t1.slice(0,400));
+    if(!r.ok){let _m='HTTP '+r.status;try{const _e=JSON.parse(_t1);_m=_e?.error?.message||_m;}catch(_){}throw new Error(_m);}
+    const d=JSON.parse(_t1);
     const raw=d.content?.[0]?.text||'';
     const ideas=JSON.parse(raw.replace(/```json|```/g,'').trim());
     if(!Array.isArray(ideas))throw new Error('не массив');
@@ -1007,13 +1009,15 @@ ${ctx?'Контекст канала: '+ctx+'\n':''}
         'anthropic-dangerous-direct-browser-access':'true'
       },
       body:JSON.stringify({
-        model:'claude-sonnet-4-20250514',
+        model:'claude-sonnet-4-6',
         max_tokens:1000,
         messages:[{role:'user',content:prompt}]
       })
     });
-    if(!r.ok)throw new Error('HTTP '+r.status);
-    const d=await r.json();
+    const _t2=await r.text();
+    console.log('Claude API '+r.status+':',_t2.slice(0,400));
+    if(!r.ok){let _m='HTTP '+r.status;try{const _e=JSON.parse(_t2);_m=_e?.error?.message||_m;}catch(_){}throw new Error(_m);}
+    const d=JSON.parse(_t2);
     p.draftText=(d.content?.[0]?.text||'').trim();
     p.status='review';
     sync();
