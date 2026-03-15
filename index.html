@@ -157,8 +157,8 @@ input,textarea{-webkit-user-select:auto;user-select:auto}
   border:0.5px solid var(--brd2);box-shadow:var(--sh);
   padding:14px 16px;cursor:grab;will-change:transform;touch-action:none;
 }
-.icard:nth-child(3){transform:translateY(6px) scale(.97);opacity:.87;pointer-events:none;z-index:2}
-.icard:nth-child(4){transform:translateY(12px) scale(.94);opacity:.64;pointer-events:none;z-index:1}
+.icard:nth-child(3){transform:translateY(6px) scale(.97);pointer-events:none;z-index:2}
+.icard:nth-child(4){transform:translateY(12px) scale(.94);pointer-events:none;z-index:1}
 .icard.top{z-index:3}
 .ctag{
   font-size:9px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;
@@ -445,7 +445,7 @@ input,textarea{-webkit-user-select:auto;user-select:auto}
       <div class="set-field">
         <label>Контекст канала</label>
         <textarea class="set-input" id="sCtx" rows="3" style="resize:none;line-height:1.5"
-          placeholder="Канал о применении ИИ в мебельном производстве. Аудитория — руководители и технологи. Тон: практичный, от первого лица."></textarea>
+          placeholder="Мебель+ИИ — канал мебельщика-энтузиаста об ИИ на производстве"></textarea>
         <div class="set-hint">Claude учитывает это при генерации идей и написании черновиков.</div>
       </div>
       <div style="display:flex;gap:8px;margin-top:4px">
@@ -500,7 +500,7 @@ let appData={
   settings:{
     channelName:'Мебель+ИИ',
     claudeKey:'',
-    channelContext:'Канал о применении ИИ в мебельном производстве. Аудитория — руководители и технологи мебельных компаний. Тон: практичный, конкретный, от первого лица. Без воды и корпоративного языка.'
+    channelContext:'Канал «Мебель+ИИ». Автор — мебельщик с 25-летним стажем, дизайнер по образованию, айтишник по увлечению. За год без знания программирования создал 17+ рабочих программ с помощью ИИ. Пишет про реальный опыт внедрения ИИ на мебельном производстве: что работает, что нет, честные факапы и выводы. Аудитория — такие же практики из мебельной отрасли. Тон: от первого лица, конкретно, без корпоративного языка. С юмором и самоиронией. Примеры из реальной практики важнее теории.'
   },
   meta:{v:APP_VER}
 };
@@ -822,9 +822,9 @@ function openPost(id){
     <div class="sh-title">${esc(p.title)}</div>
     <div class="sh-sub">${esc(p.format||'пост')} · ${esc(SM[p.status]?.l||'черновик')}</div>
 
-    <div class="sh-block">
-      <div class="sh-blbl">Тезис</div>
-      <div class="sh-btext">${esc(p.desc)}</div>
+    <div class="sh-block" style="padding-bottom:8px">
+      <div class="sh-blbl">Тезис — отредактируй перед генерацией</div>
+      <textarea id="editDesc" style="width:100%;border:none;background:transparent;font-family:var(--fn);font-size:13px;color:var(--t1);resize:none;outline:none;line-height:1.55;margin-top:4px;min-height:60px" oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'">${esc(p.desc)}</textarea>
     </div>
 
     ${p.draftText
@@ -972,6 +972,12 @@ ${used.length?'\nУже используются (не повторяй):\n'+use
 // CLAUDE API — WRITE DRAFT
 // ═══════════════════════════════════════════════════════════
 async function writeDraft(id){
+  // Сохраняем отредактированный тезис перед генерацией
+  const editEl=document.getElementById('editDesc');
+  if(editEl){
+    const p2=(appData.posts||[]).find(x=>x.id===id);
+    if(p2&&editEl.value.trim())p2.desc=editEl.value.trim();
+  }
   const key=appData.settings?.claudeKey;
   if(!key){toast('Нужен API ключ в настройках ⚙️');return;}
 
